@@ -3,6 +3,15 @@
 {% block title %}Home Page{% endblock %}
 
 {% block content %}
-    <h1>Welcome, {{ name }}!</h1>
-    <p>This is the unique content for the home page.</p>
+    <div>
+        <h1>TASKS</h1>
+        {% for task in tasks %}
+            <p>Title is {{ task.title }}</p>
+            <p>Assigned to: {{ task.user }}</p>
+            <p>Created at: {{ task.created_at }}</p>
+            <p>Deadline: {{ task.deadline }}</p>
+            <p>Completed: {{ task.completed }}</p>
+
+        {% endfor %}
+    </div>
 {% endblock %}
