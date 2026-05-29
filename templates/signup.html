@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup</title>
+</head>
+<body>
+    <h2>Create Account</h2>
+    <!-- <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register</button>
+    </form> -->
+
+    <form method="POST">
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+
+    {% for field in form %}
+        <p>
+            {{ field.label_tag }}
+            {{ field }}
+
+            {% for error in field.errors %}
+                <span style="color:red">{{ error }}</span>
+            {% endfor %}
+        </p>
+    {% endfor %}
+
+    <button type="submit">Signup</button>
+</form>
+
+    <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+</body>
+</html>
