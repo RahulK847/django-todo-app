@@ -9,12 +9,22 @@
     </title>
 </head>
 <body>
-
+{% block content %}
     <h1>Hi, {{ first_name }}!</h1>
     <p>This is the home page. You can manage your tasks here.</p>
     <a href="{% url 'logout' %}">Logout</a>
 
-{% block content %}
+    <form method="POST" action="{% url 'add_task' %}">
+    {% csrf_token %}
+
+    {{ form.title }}
+
+    <button type="submit">
+        Add
+    </button>
+</form>
+
+
     <div>
         <h1>TASKS</h1>
         {% for task in tasks %}
