@@ -4,6 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .models import Task
 from .forms import RegisterForm, TaskForm
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 def signup_view(request):
@@ -56,6 +57,7 @@ def home(request):
     }
     return render(request, 'home.html', context)
 
+
 def logout_view(request):
     logout(request)
     return redirect('login')
@@ -63,7 +65,7 @@ def logout_view(request):
 def add_task(request):
     if request.method == "POST":
         form  = TaskForm(data=request.POST)
-        print("post request received")
+        # print("post request received")
 
         if form.is_valid():
             print("form is valid")
@@ -71,10 +73,23 @@ def add_task(request):
             task.user = request.user # Set the user field of the Task object to the currently logged-in user
             task.save() # Now save the Task object to the database
             return redirect('home')
-        else:
-            print(form.errors)
+        # else:
+        #     print(form.errors)
     else:
         form = TaskForm()
     return render(request, 'home.html', {'form': form})
+
+@login_required
+def complete_task(request, pk):
+    task = get_object_or_404(Task, id=pk, user=request.user)
+    task.completed = True
+    task.save()
+    return redirect('home')
+
+@login_required
+def delete_task(request, pk):
+    task = get_object_or_404(Task, id=pk, user=request.user)
+    task.delete()
+    return redirect('home')
         
 

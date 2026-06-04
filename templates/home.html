@@ -28,11 +28,16 @@
     <div>
         <h1>TASKS</h1>
         {% for task in tasks %}
+            {% if not task.completed %}
             <p>Title is {{ task.title }}</p>
-            <p>Assigned to: {{ task.user }}</p>
-            <p>Created at: {{ task.created_at }}</p>
-            <p>Deadline: {{ task.deadline }}</p>
-            <p>Completed: {{ task.completed }}</p>
+            <a href = "{% url 'delete_task' task.pk %}">
+                <button>Delete</button>
+            </a>
+            <a href = "{% url 'complete_task' task.pk %}">
+                <button>Complete</button>
+            </a>
+            {% endif %}
+            
 
         {% endfor %}
     </div>
