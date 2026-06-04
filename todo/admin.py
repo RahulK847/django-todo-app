@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import Task
+from .models import Task, TaskHistory
 
 # Register your models here.
 admin.site.site_header = "Todo App Admin"
 admin.site.site_title = "Todo App Admin Portal"
 admin.site.index_title = "Welcome to the Todo App Admin Portal"
 admin.site.register(Task)
+admin.site.register(TaskHistory)

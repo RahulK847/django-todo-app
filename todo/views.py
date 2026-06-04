@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Task
+from .models import Task, TaskHistory
 from .forms import RegisterForm, TaskForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
@@ -82,14 +82,27 @@ def add_task(request):
 @login_required
 def complete_task(request, pk):
     task = get_object_or_404(Task, id=pk, user=request.user)
-    task.completed = True
-    task.save()
+    TaskHistory.objects.create(
+        user = request.user, 
+        title = task.title, 
+        action = TaskHistory.COMPLETED
+        )
+    task.delete()
     return redirect('home')
 
 @login_required
 def delete_task(request, pk):
     task = get_object_or_404(Task, id=pk, user=request.user)
+    TaskHistory.objects.create(
+        user = request.user, 
+        title = task.title, 
+        action = TaskHistory.DELETED
+        )
     task.delete()
     return redirect('home')
+
+def task_history(request):
+    history = TaskHistory.objects.filter(user=request.user)
+    return render(request, 'history.html', {'history': history})
         
 

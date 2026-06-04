@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task History</title>
+</head>
+<body>
+
+    <h1>Task History</h1>
+    <a href="{% url 'home' %}">← Back to Home</a>
+
+    {% if history %}
+        {% for record in history %}
+        <div>
+            <p>{{ record.title }} {{ record.action }} {{ record.created_at }}</p>
+        </div>
+        <hr>
+        {% endfor %}
+
+    {% else %}
+        <p>No history yet.</p>
+    {% endif %}
+
+</body>
+</html>
