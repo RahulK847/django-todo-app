@@ -18,6 +18,8 @@
     {% csrf_token %}
 
     {{ form.title }}
+    {{ form.priority }}
+    {{ form.deadline }}
 
     <button type="submit">
         Add
@@ -28,16 +30,13 @@
     <div>
         <h1>TASKS</h1>
         {% for task in tasks %}
-            {% if not task.completed %}
-            <p>Title is {{ task.title }}</p>
+            <p>{{ task.title }}</p>
             <a href = "{% url 'delete_task' task.pk %}">
                 <button>Delete</button>
             </a>
             <a href = "{% url 'complete_task' task.pk %}">
                 <button>Complete</button>
-            </a>
-            {% endif %}
-            
+            </a>        
 
         {% endfor %}
     </div>

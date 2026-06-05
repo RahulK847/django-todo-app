@@ -29,19 +29,19 @@ class RegisterForm(UserCreationForm):
             raise forms.ValidationError('Email already exists')
         return email
 
-class TaskForm(ModelForm):
+class TaskForm(ModelForm): # Define a form for the Task model
 
-    # priority_choices = [
-    #     (0, 'High'),
-    #     (1, 'Normal'),
-    #     (2, 'Low'),
-    # ]
-    # priority = forms.ChoiceField(required=False, initial=1, choices=priority_choices, widget=forms.Select())
-    # we don't need to define priority field here as it is already defined in the model with choices, we can directly use it in the form
-
-    deadline = forms.DateTimeField(required=False, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
-    # unlike priority, we need to define deadline field here because we want to use a custom widget for it, and also make it optional
-
-    class Meta:
+    class Meta: # Define the model and fields to be used in the form
         model = Task
-        fields = ['title'] # ,'priority', 'deadline'
+        fields = ['title', 'priority', 'deadline'] # Define the fields to be used in the form
+        
+        widgets = { # Use a DateTimeInput widget for the deadline field to allow users to select date and time
+        'deadline': forms.DateTimeInput(
+            attrs={'type': 'datetime-local'}
+        )
+    }
+
+    def __init__(self, *args, **kwargs): # Override the __init__ method to set priority field as optional
+        super().__init__(*args, **kwargs) # Call the parent class's __init__ method
+        self.fields['priority'].required = False
+        self.fields['deadline'].required = False
