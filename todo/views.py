@@ -5,6 +5,9 @@ from .models import Task, TaskHistory
 from .forms import RegisterForm, TaskForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from django.db.models import F
+from django.utils import timezone
+
 
 # Create your views here.
 def signup_view(request):
@@ -48,12 +51,35 @@ def login_view(request):
 
 @login_required
 def home(request):
+    sort_cycle = {
+        "date": "priority",
+        "priority": "deadline",
+        "deadline": "date"
+    }
+
     form = TaskForm() # Initialize the form to be used in the template for adding new tasks
-    tasks = Task.objects.filter(user=request.user)
+
+    current_sort = request.GET.get('sort', 'date') # Get the current sorting criteria from the query parameters, default to 'date' if not provided
+    
+    if current_sort not in sort_cycle:
+        current_sort = 'date' # If the provided sorting criteria is not valid, default to 'date'
+
+    next_sort = sort_cycle[current_sort] # Get the next sorting criteria for the toggle button in the template
+    
+    if current_sort == 'date':
+        tasks = Task.objects.filter(user=request.user).order_by('-created_at') # Sort tasks by creation date in descending order'
+    elif current_sort == 'priority':
+        tasks = Task.objects.filter(user=request.user).order_by('priority') # Sort tasks by priority in ascending order
+    elif current_sort == 'deadline':
+        tasks = Task.objects.filter(user=request.user).order_by(F('deadline').asc(nulls_last=True)) # Sort tasks by deadline in ascending order
+    
     context = {
         'first_name': request.user.first_name,
         'tasks': tasks,
-        'form': form
+        'form': form,
+        'current_sort': current_sort,
+        'next_sort': next_sort,
+        'now': timezone.now(), # Pass the current time to the template for deadline comparison
     }
     return render(request, 'home.html', context)
 
