@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, signup_view, login_view, logout_view, add_task, complete_task, delete_task, task_history # ← import add_task
+from .views import change_password, home, signup_view, login_view, logout_view, add_task, complete_task, delete_task, task_history, profile # ← import add_task
 
 urlpatterns = [
     path('',          home,         name='home'),
@@ -10,5 +10,7 @@ urlpatterns = [
     path('complete-task/<int:pk>',complete_task, name='complete_task' ),
     path('delete-task/<int:pk>', delete_task, name='delete_task'),
     path('task-history/', task_history, name='task_history'),
+    path('profile/', profile, name='profile'),
+    path('change-password/', change_password, name='change_password'),
 
 ]

@@ -1,19 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>
-        {% block title %}ToDo App{% endblock %}
-    </title>
-</head>
-<body>
-    
+{% extends 'base.html' %}
+
+{% block title %}ToDo App{% endblock %}
+
 {% block content %}
     <h1>Hi, {{ first_name }}!</h1>
-
-     
 
 
 </a>
@@ -36,15 +26,19 @@
     <form method="POST" action="{% url 'add_task' %}">
     {% csrf_token %}
     {{ form.title }}
-    {{ form.priority }}
-    {{ form.deadline }}
+    <button type="button" id="advanced-btn" >⚙</button>
     <button type="submit"> Add Task</button>
+    <div id="advanced-settings">
+        {{ form.priority }}
+        {{ form.deadline }}
+    </div>
+    
 </form>
 
 
 <!-- task list -->    
 {% for task in tasks %}
-    <div>
+    <div >
         <p>{{ task.title }}</p>
         <!-- Show additional details based on the current sorting criteria -->
         {% if current_sort == 'priority' %} 
@@ -80,7 +74,3 @@
 {% endfor %}
 
 {% endblock %}
-
-
-</body>
-</html>

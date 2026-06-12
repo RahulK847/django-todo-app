@@ -1,8 +1,8 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Task, TaskHistory
-from .forms import RegisterForm, TaskForm
+from .forms import RegisterForm, TaskForm, UserUpdateForm, CustomPasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.db.models import F
@@ -130,5 +130,30 @@ def delete_task(request, pk):
 def task_history(request):
     history = TaskHistory.objects.filter(user=request.user)
     return render(request, 'history.html', {'history': history})
+
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = UserUpdateForm(instance=request.user)
+
+    return render(request, 'profile.html', {'form': form})
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important to keep the user logged in after password change
+            return redirect('profile')
+    else:
+        form = CustomPasswordChangeForm(request.user)
+
+    return render(request, 'change_password.html', {'form': form})
         
 
