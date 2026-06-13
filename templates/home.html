@@ -19,6 +19,7 @@
     </button></a>
 
     <a href="{% url 'task_history' %}"><button>View Task History</button></a>
+    <a href="{% url 'profile' %}"><button>Profile</button></a>
     <a href="{% url 'logout' %}"><button>Logout</button></a>
 
 
@@ -69,8 +70,7 @@
             </form>
         </div>
     </div>
-{% empty %}
-    <p>No tasks yet.</p>
 {% endfor %}
+<p align="center" style="color: gray;"> You have <span style="color: #39FF14;">{{ tasks.count }}</span> tasks.</p>
 
 {% endblock %}
