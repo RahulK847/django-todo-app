@@ -16,7 +16,6 @@ class DailyGoal(models.Model):
     goal_type = models.CharField(max_length=10, choices=GOAL_TYPE_CHOICES, default=DAILY)
     current_streak = models.PositiveIntegerField(default=0)
     best_streak = models.PositiveIntegerField(default=0)
-    last_completed = models.DateField(null=True, blank=True)
     is_paused = models.BooleanField(default=False)
     paused_at = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
