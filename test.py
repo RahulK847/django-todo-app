@@ -1,3 +1,5 @@
+this is my views.py
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
@@ -54,3 +56,39 @@ def complete_goal(request, pk):
     )
 
     return redirect("daily_goals")
+
+
+
+
+this is my forms.py
+
+from django import forms
+from django.forms import ModelForm, ValidationError
+from .models import DailyGoal
+
+
+class DailyGoalForm(ModelForm):
+
+    class Meta:
+        model = DailyGoal
+        fields = ['title', 'goal_type']
+        labels = {
+            'title':     'Goal',
+            'goal_type': 'Frequency',    
+        }
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'placeholder': 'Add Daily Goal and hit enter to add',
+            }),
+            'goal_type': forms.RadioSelect(),   # ○ Daily  ○ Weekday — cleaner than dropdown
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)   # ← grab user before super()
+        super().__init__(*args, **kwargs)
+
+    def clean_title(self):
+        title = self.cleaned_data.get('title')
+        if DailyGoal.objects.filter(user=self.user, title__iexact=title).exists():
+            raise forms.ValidationError('A goal with this name already exists.')
+        return title
